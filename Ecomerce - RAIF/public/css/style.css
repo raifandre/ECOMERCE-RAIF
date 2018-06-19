@@ -1,0 +1,49 @@
+#logo{
+  width: 300px;
+  margin-left: 47%;
+}
+
+#logoCarrinho{
+  height: 50px;
+  margin-left: 40%;
+  margin-top: 40%;
+}
+
+.destaque{
+  margin-top: 50px;
+  margin-left: 70px;
+}
+
+.menu-vertical{
+  width: 160px;
+}
+
+#obrigatorio{
+	color: red;
+}
+
+#navbarDropdown{
+  color: rgb(224, 87, 61);
+}
+
+body{
+  overflow-x:hidden;
+}
+
+.label{
+  position:absolute;
+}
+
+.contadorCarrinho {
+  background: #d92300;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  z-index: 1;
+  top: 20px;
+  right:-12px;
+  border-radius: 7px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
