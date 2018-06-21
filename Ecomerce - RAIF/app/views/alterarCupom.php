@@ -1,15 +1,15 @@
 <?php
-    include_once("../controllers/Categoria_Controller.php");
-    $categoria = new Categoria_Controller;
-    $categorias = $categoria->listar();
-    $quant = count($categorias);
+    include_once("../controllers/Cupom_Controller.php");
+    $id = $_GET['id'];
+    $cupom = new Cupom_Controller;
+    $buscar = $cupom->buscarId($id);
 
     include_once("../controllers/Carrinho_Controller.php");
     $carrinho = new Carrinho_Controller;
     $list = $carrinho->listar();
     $quantia = count($list);
 ?>
-
+<!DOCTYPE HTML>
 <html lang="pt-br">
     <head>
     <title>NIKE Store</title>
@@ -39,14 +39,14 @@
                     <div class="col-12 row">
                         <nav class="navbar navbar-expand-lg navbar-light bg-light">
                             <ul class="navbar-nav mr-auto">
-                                <li class="nav-item"><a class="nav-link" href="index.php" id="navbarDropdown">Início</a></li>
+                                <li><a class="navbar-brand" href="index.php" id="navbarDropdown">Início</a></li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                       Produto
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                       <a class="dropdown-item" href="listarProdutos.php">Listar Produtos</a>
-                                      <a class="dropdown-item" href="cadastrarProduto.php">Cadastrar Produto</a>
+                                      <a class="dropdown-item" href="listarCategorias.php">Cadastrar Produto</a>
                                     </div>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -75,37 +75,20 @@
 
             <!-- CONTEUDO -->
             <div class="container">
-                <form id="cadastrarProduto" enctype="multipart/form-data" method="post" role="cadastrarProduto" onsubmit="return false;" accept-charset="utf-8">
-                    <input type="hidden" name="cadastrarProduto" id="cadastrarProduto" />
+                <form id="alterar" enctype="multipart/form-data" method="post" role="alterar" onsubmit="return false;" accept-charset="utf-8">
+                    <input type="hidden" id="alterarCupom" name="alterarCupom" value="<?= $id?>">
                     <div class="row">
                         <div class="col-md-12 row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <b><label>Nome <i id="obrigatorio">*</i>:</label></b>
-                                    <input class="form-control" type="text" id="nome" name="nome" placeholder="Nome do Produto" required>
+                                    <input class="form-control" type="text" id="nome" name="nome" placeholder="Nome do Desconto" value="<?= $buscar->nome?>" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <b><label>Categoria <i id="obrigatorio">*</i>:</label></b>
-                                    <select class="form-control" id="categoria" name="categoria" required>
-                                        <option value="0">Selecione uma categoria</option>
-                                        <?php for ($i=0; $i < $quant; $i++) { ?>
-                                            <option value="<?php echo $categorias[$i]->nome?>"><?php echo $categorias[$i]->nome ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <b><label>Preço <i id="obrigatorio">*</i>:</label></b>
-                                    <input class="form-control" type="text" id="preco" name="preco" placeholder="Preço do Produto" required>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <b><label>Descrição <i id="obrigatorio">*</i>:</label></b>
-                                    <input class="form-control" type="text" id="descricao" name="descricao" placeholder="Descrição do Produto" required>
+                                    <b><label>Desconto <i id="obrigatorio">*</i>:</label></b>
+                                    <input class="form-control" type="text" id="desconto" name="desconto" placeholder="Porcentagem de Desconto" value="<?= $buscar->desconto?>" required>
                                 </div>
                             </div>
                         </div>
@@ -117,8 +100,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group text-right">
-                                    <a href="index.php"><button type="button" class="btn btn-danger">Cancelar</button></a>
-                                    <button type="submit" onclick="cadastrar()" class="btn btn-success">Salvar</button>
+                                    <a href="visualizarCupom.php?id=<?=$buscar->id?>"><button type="button" class="btn btn-danger">Cancelar</button></a>
+                                    <a href="alterar.php"><button type="submit" onclick="alterar();" class="btn btn-success">Salvar</button></a>
                                 </div>
                             </div>
                         </div><br>
@@ -138,27 +121,31 @@
         </body>
     </head>
 </html>
+
 <script>
-    function cadastrar() {
-        if($('#nome').val() == '' || $('#categoria').val() == '' || $('#preco').val() == '' || $('#descricao').val() == ''){
+
+    function alterar() {
+
+        if($('#nome').val() == '' || $('#desconto').val() == ''){
 
             alert('Preencha os campos obrigatorios.')
             return false;
 
         } else {
-            var dados = $('#cadastrarProduto').serialize();
+
+            var dados = $('#alterar').serialize();
             $.ajax({
                 //Envia os valores para action
-                url: '../actions/cadastrarProduto.php',
+                url: '../actions/alterarCupom.php',
                 type: 'post',
                 dataType: 'html',
                 data: dados,
                 success: function(result){
-                    if(result == 'Cadastro realizado com sucesso.'){
+                    if(result == 'Dados alterado com sucesso.'){
                         alert(result);
-                        setTimeout("document.location = './cadastrarProduto.php'", 1000);
+                        setTimeout("document.location = './listarCupons.php'", 1000);
                     } else {
-                        alert("Falha ao cadastrar Produto.");
+                        alert("Falha ao alterar dados.");
                     }
                 }
             });

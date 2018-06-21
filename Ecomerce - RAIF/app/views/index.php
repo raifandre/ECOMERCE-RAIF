@@ -49,13 +49,23 @@
                                       <a class="dropdown-item" href="listarProdutos.php">Listar Produtos</a>
                                       <a class="dropdown-item" href="cadastrarProduto.php">Cadastrar Produto</a>
                                     </div>
-                                </li><li class="nav-item dropdown">
+                                </li>
+                                <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                       Categoria
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                       <a class="dropdown-item" href="listarCategorias.php">Listar Categorias</a>
                                       <a class="dropdown-item" href="cadastrarCategoria.php">Cadastrar Categoria</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Cupom
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                      <a class="dropdown-item" href="listarCupons.php">Listar Cupons</a>
+                                      <a class="dropdown-item" href="cadastrarCupom.php">Cadastrar Cupom</a>
                                     </div>
                                 </li>
                             </ul>

@@ -1,15 +1,15 @@
 <?php
-    include_once("../controllers/Categoria_Controller.php");
-    $categoria = new Categoria_Controller;
-    $categorias = $categoria->listar();
-    $quant = count($categorias);
+    include_once("../controllers/Cupom_Controller.php");
+    $cupom = new Cupom_Controller;
+    $listar = $cupom->listar();
+    $quant = count($listar);
 
     include_once("../controllers/Carrinho_Controller.php");
     $carrinho = new Carrinho_Controller;
     $list = $carrinho->listar();
     $quantia = count($list);
 ?>
-
+<!DOCTYPE HTML>
 <html lang="pt-br">
     <head>
     <title>NIKE Store</title>
@@ -75,55 +75,27 @@
 
             <!-- CONTEUDO -->
             <div class="container">
-                <form id="cadastrarProduto" enctype="multipart/form-data" method="post" role="cadastrarProduto" onsubmit="return false;" accept-charset="utf-8">
-                    <input type="hidden" name="cadastrarProduto" id="cadastrarProduto" />
-                    <div class="row">
-                        <div class="col-md-12 row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <b><label>Nome <i id="obrigatorio">*</i>:</label></b>
-                                    <input class="form-control" type="text" id="nome" name="nome" placeholder="Nome do Produto" required>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <b><label>Categoria <i id="obrigatorio">*</i>:</label></b>
-                                    <select class="form-control" id="categoria" name="categoria" required>
-                                        <option value="0">Selecione uma categoria</option>
-                                        <?php for ($i=0; $i < $quant; $i++) { ?>
-                                            <option value="<?php echo $categorias[$i]->nome?>"><?php echo $categorias[$i]->nome ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <b><label>Preço <i id="obrigatorio">*</i>:</label></b>
-                                    <input class="form-control" type="text" id="preco" name="preco" placeholder="Preço do Produto" required>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <b><label>Descrição <i id="obrigatorio">*</i>:</label></b>
-                                    <input class="form-control" type="text" id="descricao" name="descricao" placeholder="Descrição do Produto" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 row">
-                            <div class="col-md-6">
-                                <div class="form-group text-left">
-                                    <b><i>Os campos com <i id="obrigatorio">* </i>são obrigatorios.</i></b>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group text-right">
-                                    <a href="index.php"><button type="button" class="btn btn-danger">Cancelar</button></a>
-                                    <button type="submit" onclick="cadastrar()" class="btn btn-success">Salvar</button>
-                                </div>
-                            </div>
-                        </div><br>
-                    </div>
-                </form>
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr class="col-md-12">
+                                <th scope="col" class="text-center">#</th>
+                                <th scope="col" class="text-center">Nome</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php for ($i=0; $i < $quant; $i++) { ?>
+                                <tr>
+                                    <th scope="row" class="text-center"><?php echo $listar[$i]->id?></th>
+                                    <td class="text-center"><a href="visualizarCupom.php?id=<?php echo $listar[$i]->id?>"><?php echo $listar[$i]->nome?></a></td>
+                                    <td class="text-center"><a href="alterarCupom.php?id=<?php echo $listar[$i]->id?>"><button class="btn btn-primary">Alterar</button></a> <button type="button" class="btn btn-danger" onclick="incrementId(<?php echo $listar[$i]->id?>);" data-toggle="modal" data-target="#deleteModal">Excluir</button></td>
+                                </tr>
+
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- RODAPE -->
@@ -135,36 +107,35 @@
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
             <script src="../../public/js/jquery.js"></script>
             <script src="../../public/js/jquery.mask.js"></script>
+
+            <!-- Modal -->
+            <div id="deleteModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Excluir</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Deseja realmente excluir esses dados ?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+                            <a id="deletar"><button type="submit" class="btn btn-success" id="deleteSim" data-dismiss="">Sim</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+
+                function incrementId(id) {
+                    $("#deleteSim").attr('onclick', 'deletar('+id+');');
+                    $("#deletar").attr('href', '../actions/deletarCupom.php?id='+id);
+
+                }
+
+            </script>
         </body>
     </head>
 </html>
-<script>
-    function cadastrar() {
-        if($('#nome').val() == '' || $('#categoria').val() == '' || $('#preco').val() == '' || $('#descricao').val() == ''){
-
-            alert('Preencha os campos obrigatorios.')
-            return false;
-
-        } else {
-            var dados = $('#cadastrarProduto').serialize();
-            $.ajax({
-                //Envia os valores para action
-                url: '../actions/cadastrarProduto.php',
-                type: 'post',
-                dataType: 'html',
-                data: dados,
-                success: function(result){
-                    if(result == 'Cadastro realizado com sucesso.'){
-                        alert(result);
-                        setTimeout("document.location = './cadastrarProduto.php'", 1000);
-                    } else {
-                        alert("Falha ao cadastrar Produto.");
-                    }
-                }
-            });
-
-        }
-
-    }
-
-</script>

@@ -39,7 +39,7 @@
                     <div class="contadorCarrinho">
                         <span class="label" style="margin-left: 5px;"><?php echo $quantia ?></span>
                     </div>
-                    <span class="label" style="margin-top: 150px; margin-left: -100px; color: red; width: 220px">Preço total: R$<?php echo $total ?>,00</span>
+                    <span class="label" style="margin-top: 150px; margin-left: -100px; color: red; width: 220px">Preço total: R$<span id="valorTotal2"><?php echo $total ?></span>,00</span>
                 </a>
             </div>
         </div><hr>
@@ -59,13 +59,23 @@
                                       <a class="dropdown-item" href="listarProdutos.php">Listar Produtos</a>
                                       <a class="dropdown-item" href="cadastrarProduto.php">Cadastrar Produto</a>
                                     </div>
-                                </li><li class="nav-item dropdown">
+                                </li>
+                                <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                       Categoria
                                     </a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                       <a class="dropdown-item" href="listarCategorias.php">Listar Categorias</a>
                                       <a class="dropdown-item" href="cadastrarCategoria.php">Cadastrar Categoria</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Cupom
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                      <a class="dropdown-item" href="listarCupons.php">Listar Cupons</a>
+                                      <a class="dropdown-item" href="cadastrarCupom.php">Cadastrar Cupom</a>
                                     </div>
                                 </li>
                             </ul>
@@ -111,20 +121,20 @@
                     <?php
                      } ?>
                 </div>
-                <form id="cupomDesconto" enctype="multipart/form-data" method="post" role="cupomDesconto" onsubmit="return false;" accept-charset="utf-8">
+                <form id="cupomDesconto" name="cupomDesconto" enctype="multipart/form-data" method="post" role="cupomDesconto" onsubmit="return false;" accept-charset="utf-8">
                     <div class="col-md-12">
                         <div class="col-md-6 row">
                             <div class="form-group">
                                 <b><label>Cupom de Desconto</i>:</label></b>
-                                <input class="form-control" type="text" id="cupom" name="cupom" placeholder="Cupom de desconto">
+                                <input class="form-control" type="text" id="nome" name="nome" placeholder="Cupom de desconto">
                             </div>
                         </div>
                         <div class="col-md-3 row">
                             <div class="form-group">
-                                <button type="button" class="btn btn-success" onclick="addCupom()">Adicionar</button>
+                                <button type="submit" class="btn btn-success" onclick="addCupom()">Adicionar</button>
                             </div>
                         </div>
-                        <h4 class="text-left" style="margin-top: -100px; margin-left: 500px; color: red; width: 220px">Preço total: R$<?php echo $total ?>,00</h4>
+                        <h4 class="text-left" style="margin-top: -100px; margin-left: 500px; color: red; width: 220px">Preço total: R$<span id="valorTotal"><?php echo $total ?></span>,00</h4>
                     </div>
                 </form>
             </div>
@@ -181,6 +191,30 @@
                                 setTimeout("document.location = './carrinho.php'", 1000);
                             } else {
                                 alert("Falha ao alterar carrinho.");
+                            }
+                        }
+                    });
+
+                }
+
+                function addCupom() {
+                    var dados = $('#cupomDesconto').serialize();
+                    $.ajax({
+                        //Envia os valores para action
+                        url: '../actions/validarCupom.php?nomeCupom='+$('#nome').val(),
+                        type: 'post',
+                        dataType: 'html',
+                        data: dados,
+                        success: function(result){
+                            if(result > 0 && result <= 100){
+                                var valorTotal = $('#valorTotal').html();
+                                var newValor = valorTotal - (valorTotal * (result/100));
+                                $('#valorTotal').html(newValor),
+                                $('#valorTotal2').html(newValor);
+                                alert("Cupom validado com sucesso.");
+                                //setTimeout("document.location = './carrinho.php'", 1000);
+                            } else {
+                                alert("Cupom Inválido.");
                             }
                         }
                     });

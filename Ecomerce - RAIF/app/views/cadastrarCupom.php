@@ -1,9 +1,4 @@
 <?php
-    include_once("../controllers/Categoria_Controller.php");
-    $categoria = new Categoria_Controller;
-    $categorias = $categoria->listar();
-    $quant = count($categorias);
-
     include_once("../controllers/Carrinho_Controller.php");
     $carrinho = new Carrinho_Controller;
     $list = $carrinho->listar();
@@ -75,37 +70,20 @@
 
             <!-- CONTEUDO -->
             <div class="container">
-                <form id="cadastrarProduto" enctype="multipart/form-data" method="post" role="cadastrarProduto" onsubmit="return false;" accept-charset="utf-8">
-                    <input type="hidden" name="cadastrarProduto" id="cadastrarProduto" />
+                <form id="cadastrarCupom" enctype="multipart/form-data" method="post" role="cadastrarCupom" onsubmit="return false;" accept-charset="utf-8">
+                    <input type="hidden" name="cadastrarCupom" id="cadastrarCupom" />
                     <div class="row">
                         <div class="col-md-12 row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <b><label>Nome <i id="obrigatorio">*</i>:</label></b>
-                                    <input class="form-control" type="text" id="nome" name="nome" placeholder="Nome do Produto" required>
+                                    <input class="form-control" type="text" id="nome" name="nome" placeholder="Nome do Desconto" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <b><label>Categoria <i id="obrigatorio">*</i>:</label></b>
-                                    <select class="form-control" id="categoria" name="categoria" required>
-                                        <option value="0">Selecione uma categoria</option>
-                                        <?php for ($i=0; $i < $quant; $i++) { ?>
-                                            <option value="<?php echo $categorias[$i]->nome?>"><?php echo $categorias[$i]->nome ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <b><label>Preço <i id="obrigatorio">*</i>:</label></b>
-                                    <input class="form-control" type="text" id="preco" name="preco" placeholder="Preço do Produto" required>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <b><label>Descrição <i id="obrigatorio">*</i>:</label></b>
-                                    <input class="form-control" type="text" id="descricao" name="descricao" placeholder="Descrição do Produto" required>
+                                    <b><label>Desconto <i id="obrigatorio">*</i>:</label> (Inserir apenas o número)</b>
+                                    <input class="form-control" type="text" id="desconto" name="desconto" placeholder="Porcentagem de Desconto" required>
                                 </div>
                             </div>
                         </div>
@@ -140,25 +118,25 @@
 </html>
 <script>
     function cadastrar() {
-        if($('#nome').val() == '' || $('#categoria').val() == '' || $('#preco').val() == '' || $('#descricao').val() == ''){
+        if($('#nome').val() == '' || $('#desconto').val() == ''){
 
             alert('Preencha os campos obrigatorios.')
             return false;
 
         } else {
-            var dados = $('#cadastrarProduto').serialize();
+            var dados = $('#cadastrarCupom').serialize();
             $.ajax({
                 //Envia os valores para action
-                url: '../actions/cadastrarProduto.php',
+                url: '../actions/cadastrarCupom.php',
                 type: 'post',
                 dataType: 'html',
                 data: dados,
                 success: function(result){
                     if(result == 'Cadastro realizado com sucesso.'){
                         alert(result);
-                        setTimeout("document.location = './cadastrarProduto.php'", 1000);
+                        setTimeout("document.location = './cadastrarCupom.php'", 1000);
                     } else {
-                        alert("Falha ao cadastrar Produto.");
+                        alert("Falha ao cadastrar Cupom.");
                     }
                 }
             });
